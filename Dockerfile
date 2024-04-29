@@ -22,6 +22,6 @@ COPY . .
 
 RUN g++ -o main main.cpp -lpthread
 
-EXPOSE 19000
+EXPOSE 9999
 
 CMD ["./main"]

@@ -1,5 +1,8 @@
 #include "crow.h"
 
+
+const int port = 9999;
+
 int main() {
     crow::SimpleApp app;
 
@@ -7,5 +10,5 @@ int main() {
         return "Hello world!";
     });
 
-    app.port(19000).multithreaded().run();
+    app.port(port).multithreaded().run();
 }
