@@ -1,3 +1,4 @@
+# get baseimage
 FROM ubuntu:latest
 
 RUN apt-get update && apt-get install -y \
@@ -10,24 +11,28 @@ RUN apt-get update && apt-get install -y \
     libasio-dev \
     libsqlite3-dev
 
-WORKDIR /backend
+WORKDIR /app
 
 RUN git clone https://github.com/CrowCpp/Crow.git
 RUN git clone https://github.com/SRombauts/SQLiteCpp.git
 
-WORKDIR /backend/Crow
+WORKDIR /app/Crow
 RUN mkdir build && cd build && cmake .. -DCROW_BUILD_EXAMPLES=OFF -DCROW_BUILD_TESTS=OFF && make install
 
-WORKDIR /backend/SQLiteCpp
+WORKDIR /app/SQLiteCpp
 RUN mkdir build && cd build && cmake .. -DBUILD_SHARED_LIBS=ON && make install
+#RUN mkdir build && cd build && cmake .. && make install
+# COPY libSQLiteCpp.so.0 /usr/local/lib/
 
-WORKDIR /backend
+WORKDIR /app
 
-COPY . /backend
+COPY . /app
 
 ENV LD_LIBRARY_PATH=/usr/local/lib
 
 RUN g++ -o main main.cpp -std=c++20 -lpthread -lSQLiteCpp
+
+RUN ls -l /app/main
 
 EXPOSE 9999
 
