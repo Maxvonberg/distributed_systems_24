@@ -23,6 +23,12 @@ void insert_into_table(SQLite::Database &db, std::string name){
     CROW_LOG_INFO << name  << " added to DB";
 }
 
+void delete_from_table(SQLite::Database& db, std::string name) {
+    CROW_LOG_INFO << "Removing " + name + " from DB";
+    db.exec("DELETE FROM todos WHERE name = '" + name + "'");
+    CROW_LOG_INFO << name << " removed from DB";
+}
+
 int main() {
 
     crow::SimpleApp app;
@@ -41,6 +47,11 @@ int main() {
             return crow::response(200, "Post Response: " + name);
         }
         return crow::response(405); 
+    });
+
+    CROW_ROUTE(app, "/todos/<string>").methods(crow::HTTPMethod::DELETE)([&db](const crow::request& req, const std::string& name){
+        delete_from_table(db, name);
+        return crow::response(200, "Delete Response: " + name);
     });
 
     CROW_ROUTE(app, "/todos/").methods(crow::HTTPMethod::GET)([&db](){
