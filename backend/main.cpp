@@ -37,22 +37,23 @@ int main() {
     SQLite::Database db(DB_DIR, SQLite::OPEN_READWRITE | SQLite::OPEN_CREATE);
     create_table(db);
 
-    CROW_ROUTE(app, "/todo/<string>").methods(crow::HTTPMethod::GET, crow::HTTPMethod::POST)([&db](const crow::request& req,const std::string& name){
+    CROW_ROUTE(app, "/todos/<string>").methods(crow::HTTPMethod::GET, crow::HTTPMethod::POST, crow::HTTPMethod::DELETE)([&db](const crow::request &req, const std::string &name)
+                                                                                                                        {
      if (req.method == crow::HTTPMethod::GET) {
-
             return crow::response(200, "Get Response: " + name);
+
         } else if (req.method == crow::HTTPMethod::POST) {
+
+            // Add Object
             insert_into_table(db, name);
-
             return crow::response(200, "Post Response: " + name);
-        }
-        return crow::response(405); 
-    });
+        } else if (req.method == crow::HTTPMethod::DELETE) {
 
-    CROW_ROUTE(app, "/todo/<string>").methods(crow::HTTPMethod::DELETE)([&db](const crow::request& req, const std::string& name){
-        delete_from_table(db, name);
-        return crow::response(200, "Delete Response: " + name);
-    });
+            // Delete Object
+            delete_from_table(db, name);
+            return crow::response(200, "Delete Response: " + name);
+        }
+        return crow::response(405); });
 
     CROW_ROUTE(app, "/todos/").methods(crow::HTTPMethod::GET)([&db](){
         crow::json::wvalue result;
