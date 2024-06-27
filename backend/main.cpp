@@ -49,7 +49,7 @@ int main() {
         return crow::response(405); 
     });
 
-    CROW_ROUTE(app, "/todos/<string>").methods(crow::HTTPMethod::DELETE)([&db](const crow::request& req, const std::string& name){
+    CROW_ROUTE(app, "/todo/<string>").methods(crow::HTTPMethod::DELETE)([&db](const crow::request& req, const std::string& name){
         delete_from_table(db, name);
         return crow::response(200, "Delete Response: " + name);
     });
